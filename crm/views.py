@@ -83,3 +83,48 @@ def service_delete(request, pk):
    service = get_object_or_404(Service, pk=pk)
    service.delete()
    return redirect('crm:service_list')
+
+@login_required
+def product_list(request):
+    product = Product.objects.filter(created_date__lte=timezone.now())
+    return render(request, 'crm/product_list.html',
+                 {'products': product})
+
+@login_required
+def product_edit(request, pk):
+   product = get_object_or_404(Product, pk=pk)
+   if request.method == "POST":
+       form = ProductForm(request.POST, instance=product)
+       if form.is_valid():
+           product = form.save()
+           # product.customer = product.id
+           product.updated_date = timezone.now()
+           product.save()
+           products = Product.objects.filter(created_date__lte=timezone.now())
+           return render(request, 'crm/product_list.html', {'products': products})
+   else:
+       # print("else")
+       form = ProductForm(instance=product)
+   return render(request, 'crm/product_edit.html', {'form': form})
+
+@login_required
+def product_new(request):
+   if request.method == "POST":
+       form = ProductForm(request.POST)
+       if form.is_valid():
+           product = form.save(commit=False)
+           product.created_date = timezone.now()
+           product.save()
+           products = Product.objects.filter(created_date__lte=timezone.now())
+           return render(request, 'crm/product_list.html',
+                         {'products': products})
+   else:
+       form = ProductForm()
+       # print("Else")
+   return render(request, 'crm/product_new.html', {'form': form})
+
+@login_required
+def product_delete(request, pk):
+   product = get_object_or_404(Product, pk=pk)
+   product.delete()
+   return redirect('crm:product_list')
