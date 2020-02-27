@@ -1,5 +1,6 @@
 from django.conf.urls import url
 from . import views
+from django.contrib.auth import views as auth_views
 from django.urls import path, re_path
 
 app_name = 'crm'
@@ -19,4 +20,8 @@ urlpatterns = [
     path('product/create/', views.product_new, name='product_new'),
     path('product/<int:pk>/edit/', views.product_edit, name='product_edit'),
     path('product/<int:pk>/delete/', views.product_delete, name='product_delete'),
+    #User registration and password urls
+    path('register/', views.register, name='register'),
+    path('password_change/', auth_views.PasswordChangeView.as_view(), name='password_change'),
+    path('password_change/done/', auth_views.PasswordChangeDoneView.as_view(), name='password_change_done'),
 ]
