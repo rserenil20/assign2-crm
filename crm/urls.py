@@ -2,6 +2,7 @@ from django.conf.urls import url
 from . import views
 from django.contrib.auth import views as auth_views
 from django.urls import path, re_path
+from rest_framework.urlpatterns import format_suffix_patterns
 
 app_name = 'crm'
 urlpatterns = [
@@ -24,4 +25,7 @@ urlpatterns = [
     path('register/', views.register, name='register'),
     path('password_change/', auth_views.PasswordChangeView.as_view(), name='password_change'),
     path('password_change/done/', auth_views.PasswordChangeDoneView.as_view(), name='password_change_done'),
+    url(r'^customers_json/', views.CustomerList.as_view()),
 ]
+
+urlpatterns = format_suffix_patterns(urlpatterns)
